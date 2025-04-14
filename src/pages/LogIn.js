@@ -27,7 +27,7 @@ function Login() {
                 return;
             }
 
-            login(data.user); // AuthContext login
+            login(data.user); 
             navigate("/profile");
         } catch (err) {
             console.error("İstek sırasında hata:", err);

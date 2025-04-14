@@ -8,17 +8,16 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 
-// Router dosyalarını içe aktarma
 const authRouter = require("./routes/auth");
 const postsRouter = require("./routes/posts");
 const usersRouter = require("./routes/users");
+const commentsRouter = require("./routes/comments");
 
-// Router'ları ilgili endpointlere ekleme
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/comments", commentsRouter);
 
-// Ana sayfa endpointi
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
@@ -28,7 +27,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: "Sunucu hatası." });
 });
 
-// Veritabanına bağlanmayı dene
 pool.connect()
     .then(() => {
         console.log("Veritabanına başarıyla bağlanıldı.");
@@ -37,7 +35,6 @@ pool.connect()
         console.error("Veritabanı bağlantı hatası:", err);
     });
 
-// Sunucuyu dinlemeye başlatma
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

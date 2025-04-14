@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import Comments from "../components/Comments";
 function HomePage() {
     const [posts, setPosts] = useState([]);
+    const [commentsMap, setCommentsMap] = useState({});
+    const [visibleComments, setVisibleComments] = useState({});
+    const navigate = useNavigate();
 
     const fetchPosts = async () => {
         try {
@@ -18,6 +21,30 @@ function HomePage() {
         }
     };
 
+    const fetchComments = async (postId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/comments?post_id=${postId}`);
+            const data = await response.json();
+            if (response.ok) {
+                setCommentsMap((prev) => ({ ...prev, [postId]: data }));
+            } else {
+                console.error("Yorumlar alınamadı:", data.error);
+            }
+        } catch (error) {
+            console.error("Yorumlar çekilirken hata:", error);
+        }
+    };
+
+    const toggleComments = (postId) => {
+        setVisibleComments((prev) => ({
+            ...prev,
+            [postId]: !prev[postId],
+        }));
+        if (!commentsMap[postId]) {
+            fetchComments(postId);
+        }
+    };
+
     const handleDelete = async (postId) => {
         if (!window.confirm("Bu postu silmek istediğine emin misin?")) return;
         try {
@@ -26,7 +53,6 @@ function HomePage() {
             });
             const data = await response.json();
             if (response.ok) {
-                // Silme sonrası listeyi güncelle
                 fetchPosts();
             } else {
                 console.error("Silme hatası:", data.error);
@@ -49,20 +75,35 @@ function HomePage() {
                     <Link to="/createpost" className="btn btn-success">Create a New Post</Link>
                 </div>
                 <ul className="list-group">
-                    {posts?.map((post) => (
-                        <li key={post.id} className="list-group-item d-flex justify-content-between align-items-center">
-                            <p className="mb-0">{post.title}</p>
-                            <div>
-                                <Link to={`/editpost/${post.id}`} className="btn btn-success me-2">Edit</Link>
-                                <button className="btn btn-danger" onClick={() => handleDelete(post.id)}>X</button>
-                            </div>
-                        </li>
-                    ))}
+                    {Array.isArray(posts) && posts.length > 0 ? (
+                        posts.map((post) => (
+                            <li key={post.id} className="list-group-item">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <Link to={`/post/${post.id}`} className="text-decoration-none">
+                                        <p className="mb-0 fw-bold">{post.title}</p>
+                                    </Link>
+                                    <div>
+                                        <Link to={`/editpost/${post.id}`} className="btn btn-success btn-sm me-2">Edit</Link>
+                                        <button className="btn btn-danger btn-sm" onClick={() => handleDelete(post.id)}>X</button>
+                                    </div>
+                                </div>
 
+                                <details className="mt-2">
+                                    <summary className="text-primary" style={{ cursor: "pointer" }}></summary>
+                                    <div className="mt-2">
+                                        <Comments postId={post.id} userId={null} showReplyForm={false} />
+                                    </div>
+                                </details>
+                            </li>
+                        ))
+                    ) : (
+                        <li className="list-group-item text-muted">Gösterilecek gönderi bulunamadı.</li>
+                    )}
                 </ul>
             </div>
         </div>
     );
+
 }
 
 export default HomePage;

@@ -2,7 +2,6 @@ const express = require("express");
 const pool = require("../db/pool");
 const router = express.Router();
 
-// GET tekil postu almak için
 router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
@@ -18,7 +17,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Tüm postları al
 router.get("/", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM posts ORDER BY created_at DESC");
@@ -29,7 +27,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Yeni post oluşturma
 router.post("/", async (req, res) => {
     const { title, content, author_id } = req.body;
     try {
@@ -45,7 +42,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Post güncelleme
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { title, content } = req.body;
@@ -63,7 +59,6 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Post silme
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     try {

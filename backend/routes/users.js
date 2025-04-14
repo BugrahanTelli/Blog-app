@@ -2,7 +2,6 @@ const express = require("express");
 const pool = require("../db/pool");
 const router = express.Router();
 
-// Profil güncelleme endpoint'i
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { name, surname, email } = req.body;

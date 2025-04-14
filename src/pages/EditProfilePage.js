@@ -12,7 +12,6 @@ function EditProfilePage() {
     });
 
     useEffect(() => {
-        // AuthContext'teki kullanıcı bilgilerini kullanarak formu önceden dolduruyoruz.
         if (user) {
             setProfile({
                 name: user.name || "",
@@ -32,7 +31,6 @@ function EditProfilePage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Kullanıcı profil güncelleme isteği
             const response = await fetch(`http://localhost:5000/api/users/${user.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -53,10 +51,10 @@ function EditProfilePage() {
     return (
         <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
             <div className="card p-4" style={{ width: "600px" }}>
-                <h1 className="text-center mb-4">Profili Düzenle</h1>
+                <h1 className="text-center mb-4">Edit Profile</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Kullanıcı Adı:</label>
+                        <label htmlFor="name" className="form-label">Username:</label>
                         <input
                             type="text"
                             id="name"
@@ -67,7 +65,7 @@ function EditProfilePage() {
                             required />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Email:</label>
+                        <label htmlFor="email" className="form-label">E-mail:</label>
                         <input
                             type="email"
                             id="email"
@@ -78,8 +76,8 @@ function EditProfilePage() {
                             required />
                     </div>
                     <div className="d-flex justify-content-between">
-                        <button type="submit" className="btn btn-primary">Güncelle</button>
-                        <button type="button" className="btn btn-secondary" onClick={() => navigate("/profile")}>İptal</button>
+                        <button type="submit" className="btn btn-primary">Update</button>
+                        <button type="button" className="btn btn-secondary" onClick={() => navigate("/profile")}>Cancel</button>
                     </div>
                 </form>
             </div>

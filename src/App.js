@@ -23,6 +23,7 @@ function App() {
           <Route path="/editpost/:id" element={<PrivateRoute><EditPostPage /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/edit-profile" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
+
         </Routes>
       </Router>
     </AuthProvider>

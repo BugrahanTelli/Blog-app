@@ -4,12 +4,10 @@ const jwt = require("jsonwebtoken");
 const pool = require("../db/pool");
 const router = express.Router();
 
-// Signup endpoint
 router.post("/signup", async (req, res) => {
     const { name, surname, username, email, password } = req.body;
 
     try {
-        // Şifreyi hash'lemek için
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -27,7 +25,6 @@ router.post("/signup", async (req, res) => {
     }
 });
 
-// Login endpoint
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -51,7 +48,7 @@ router.post("/login", async (req, res) => {
 
         const { password: _, ...userWithoutPassword } = user;
 
-        res.status(200).json({ user: userWithoutPassword }); // name, surname, email, username döner
+        res.status(200).json({ user: userWithoutPassword }); 
     } catch (err) {
         console.error("Login hatası:", err);
         res.status(500).json({ message: "Sunucu hatası." });
